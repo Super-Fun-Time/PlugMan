@@ -29,16 +29,25 @@ package com.rylinaux.plugman.command;
 import com.rylinaux.plugman.PlugMan;
 import com.rylinaux.plugman.util.PluginUtil;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
+
+
+
+
 
 /**
  * Command that unloads plugin(s).
  *
  * @author rylinaux
  */
-public class UnloadCommand extends AbstractCommand {
+public class UnloadCommand extends Command {
+
+    public UnloadCommand(String name) {
+        super(name);
+        // TODO Auto-generated constructor stub
+    }
 
     /**
      * The name of the command.
@@ -70,10 +79,6 @@ public class UnloadCommand extends AbstractCommand {
      *
      * @param sender the command sender
      */
-    public UnloadCommand(CommandSender sender) {
-        super(sender, NAME, DESCRIPTION, PERMISSION, SUB_PERMISSIONS, USAGE);
-    }
-
     /**
      * Execute the command.
      *
@@ -82,34 +87,30 @@ public class UnloadCommand extends AbstractCommand {
      * @param label   the name of the command
      * @param args    the arguments supplied
      */
-    @Override
-    public void execute(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!hasPermission()) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.no-permission"));
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+
+        if (!sender.hasPermission(PERMISSION)) {
+            sender.sendMessage("error.no-permission");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.specify-plugin"));
-            sendUsage();
+            sender.sendMessage("error.specify-plugin");
             return;
         }
 
         Plugin target = PluginUtil.getPluginByName(args, 1);
 
         if (target == null) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.invalid-plugin"));
-            sendUsage();
-            return;
-        }
-
-        if (PluginUtil.isIgnored(target)) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.ignored"));
+            sender.sendMessage("error.invalid-plugin");
             return;
         }
 
         sender.sendMessage(PluginUtil.unload(target));
 
     }
+        // TODO Auto-generated method stub
+
 }

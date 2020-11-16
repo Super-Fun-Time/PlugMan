@@ -1,5 +1,8 @@
 package com.rylinaux.plugman.util;
 
+import java.net.ProxySelector;
+import java.util.concurrent.TimeUnit;
+
 /*
  * #%L
  * PlugMan
@@ -28,7 +31,9 @@ package com.rylinaux.plugman.util;
 
 import com.rylinaux.plugman.PlugMan;
 
-import org.bukkit.Bukkit;
+import net.md_5.bungee.api.ProxyServer;
+
+
 
 /**
  * Utility class for threading.
@@ -43,7 +48,7 @@ public class ThreadUtil {
      * @param runnable the task.
      */
     public static void async(Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(PlugMan.getInstance(), runnable);
+        ProxyServer.getInstance().getScheduler().runAsync(PlugMan.getInstance(), runnable);
     }
 
     /**
@@ -52,7 +57,7 @@ public class ThreadUtil {
      * @param runnable the task.
      */
     public static void sync(Runnable runnable) {
-        Bukkit.getScheduler().runTask(PlugMan.getInstance(), runnable);
+        ProxyServer.getInstance().getScheduler().schedule(PlugMan.getInstance(), runnable, 0,TimeUnit.MICROSECONDS);
     }
 
 }

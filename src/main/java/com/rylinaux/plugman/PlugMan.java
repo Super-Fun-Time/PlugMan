@@ -26,43 +26,30 @@ package com.rylinaux.plugman;
  * #L%
  */
 
-import com.rylinaux.plugman.messaging.MessageFormatter;
 
 import java.util.List;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 /**
  * Plugin manager for Bukkit servers.
  *
  * @author rylinaux
  */
-public class PlugMan extends JavaPlugin {
+public class PlugMan extends Plugin {
 
     /**
      * The instance of the plugin
      */
     private static PlugMan instance = null;
 
-    /**
-     * List of plugins to ignore, partially.
-     */
-    private List<String> ignoredPlugins = null;
-
-    /**
-     * The message manager
-     */
-    private MessageFormatter messageFormatter = null;
-
     @Override
     public void onEnable() {
 
         instance = this;
 
-        messageFormatter = new MessageFormatter();
-
-        this.getCommand("plugman").setExecutor(new PlugManCommandHandler());
-        this.getCommand("plugman").setTabCompleter(new PlugManTabCompleter());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PlugManCommandHandler("plugman"));
 
         initConfig();
 
@@ -71,16 +58,13 @@ public class PlugMan extends JavaPlugin {
     @Override
     public void onDisable() {
         instance = null;
-        messageFormatter = null;
-        ignoredPlugins = null;
     }
 
     /**
      * Copy default config values
      */
     private void initConfig() {
-        this.saveDefaultConfig();
-        ignoredPlugins = this.getConfig().getStringList("ignored-plugins");
+        // no need for a config
     }
 
     /**
@@ -90,24 +74,6 @@ public class PlugMan extends JavaPlugin {
      */
     public static PlugMan getInstance() {
         return instance;
-    }
-
-    /**
-     * Returns the list of ignored plugins.
-     *
-     * @return the ignored plugins
-     */
-    public List<String> getIgnoredPlugins() {
-        return ignoredPlugins;
-    }
-
-    /**
-     * Returns the message manager.
-     *
-     * @return the message manager
-     */
-    public MessageFormatter getMessageFormatter() {
-        return messageFormatter;
     }
 
 }

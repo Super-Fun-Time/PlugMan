@@ -30,16 +30,25 @@ import com.rylinaux.plugman.PlugMan;
 import com.rylinaux.plugman.util.PluginUtil;
 import com.rylinaux.plugman.util.StringUtil;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
+
+
+
+
 
 /**
  * Command that loads plugin(s).
  *
  * @author rylinaux
  */
-public class LoadCommand extends AbstractCommand {
+public class LoadCommand extends Command {
+
+    public LoadCommand(String name) {
+        super(name);
+        // TODO Auto-generated constructor stub
+    }
 
     /**
      * The name of the command.
@@ -67,15 +76,6 @@ public class LoadCommand extends AbstractCommand {
     public static final String[] SUB_PERMISSIONS = {""};
 
     /**
-     * Construct out object.
-     *
-     * @param sender the command sender
-     */
-    public LoadCommand(CommandSender sender) {
-        super(sender, NAME, DESCRIPTION, PERMISSION, SUB_PERMISSIONS, USAGE);
-    }
-
-    /**
      * Execute the command.
      *
      * @param sender  the sender of the command
@@ -83,35 +83,32 @@ public class LoadCommand extends AbstractCommand {
      * @param label   the name of the command
      * @param args    the arguments supplied
      */
-    @Override
-    public void execute(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!hasPermission()) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.no-permission"));
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+
+        if (!sender.hasPermission(PERMISSION)) {
+            sender.sendMessage("error.no-permission");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.specify-plugin"));
-            sendUsage();
+            sender.sendMessage("error.specify-plugin");
             return;
         }
 
         Plugin potential = PluginUtil.getPluginByName(args, 1);
 
         if (potential != null) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("load.already-loaded", potential.getName()));
+            sender.sendMessage("load.already-loaded"+potential.getDescription().getName());
             return;
         }
 
         String name = StringUtil.consolidateStrings(args, 1);
 
-        if (PluginUtil.isIgnored(name)) {
-            sender.sendMessage(PlugMan.getInstance().getMessageFormatter().format("error.ignored"));
-            return;
-        }
-
         sender.sendMessage(PluginUtil.load(name));
 
     }
+        // TODO Auto-generated method stub
+
 }

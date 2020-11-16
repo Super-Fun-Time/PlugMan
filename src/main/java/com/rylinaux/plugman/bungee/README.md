@@ -1,0 +1,1 @@
+Everything in this folder is a modified version of bungeecord's source to allow for a simple plugin to be loaded/unloaded
