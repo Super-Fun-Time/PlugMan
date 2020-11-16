@@ -1,5 +1,8 @@
 package com.rylinaux.plugman;
 
+import java.io.InputStream;
+import java.net.URLClassLoader;
+
 /*
  * #%L
  * PlugMan
@@ -27,7 +30,6 @@ package com.rylinaux.plugman;
  */
 
 
-import java.util.List;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;

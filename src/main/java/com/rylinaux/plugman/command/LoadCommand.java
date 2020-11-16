@@ -96,13 +96,15 @@ public class LoadCommand extends Command {
             sender.sendMessage("error.specify-plugin");
             return;
         }
-
+        /*
+        Dont check this.
         Plugin potential = PluginUtil.getPluginByName(args, 1);
 
         if (potential != null) {
             sender.sendMessage("load.already-loaded"+potential.getDescription().getName());
             return;
         }
+        */
 
         String name = StringUtil.consolidateStrings(args, 1);
 
