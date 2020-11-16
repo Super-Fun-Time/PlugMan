@@ -26,31 +26,19 @@ package com.rylinaux.plugman.util;
  * #L%
  */
 
-import com.google.common.base.Joiner;
-import com.google.common.util.concurrent.ExecutionError;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.rylinaux.plugman.PlugMan;
 import com.rylinaux.plugman.bungee.BungeeLib;
 
-import org.yaml.snakeyaml.Yaml;
-
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.Event;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 
 /**
@@ -133,8 +121,15 @@ public class PluginUtil {
         if (!pluginDir.isDirectory()) {
             return "load.plugin-directory";
         }
-
+        
         File pluginFile = new File(pluginDir, name + ".jar");
+        if(!pluginFile.exists()){
+            for (File file:pluginDir.listFiles()){
+                if(file.getName().toLowerCase().startsWith(name.toLowerCase())&&file.getName().endsWith(".jar")) {
+                    pluginFile=file;
+                }
+            }
+        }
         String out = BungeeLib.loadJar(pluginFile);
         if(!out.equals("YES")){
             return out;
@@ -185,7 +180,7 @@ public class PluginUtil {
 
             // Call the disable function
             try {
-                Class.forName(plugin.getDescription().getMain()).getMethod("onDisable").invoke(null);
+                Class.forName(plugin.getDescription().getMain()).getMethod("onDisable").invoke(plugin);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                     | NoSuchMethodException | SecurityException | ClassNotFoundException e1) {
                 e1.printStackTrace();
@@ -208,10 +203,6 @@ public class PluginUtil {
                 Field pluginField = cl.getClass().getDeclaredField("plugin");
                 pluginField.setAccessible(true);
                 pluginField.set(cl, null);
-
-                Field pluginInitField = cl.getClass().getDeclaredField("pluginInit");
-                pluginInitField.setAccessible(true);
-                pluginInitField.set(cl, null);
 
             } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(PluginUtil.class.getName()).log(Level.SEVERE, null, ex);

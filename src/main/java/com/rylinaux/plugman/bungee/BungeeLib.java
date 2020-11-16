@@ -15,6 +15,8 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -31,7 +33,11 @@ public class BungeeLib {
             }
             try ( InputStream in = jar.getInputStream( pdf ) )
             {
-                PluginDescription desc = new Yaml().loadAs( in, PluginDescription.class );
+                Constructor yamlConstructor = new Constructor();
+                PropertyUtils propertyUtils = yamlConstructor.getPropertyUtils();
+                propertyUtils.setSkipMissingProperties( true );
+                yamlConstructor.setPropertyUtils( propertyUtils );
+                PluginDescription desc = new Yaml(yamlConstructor).loadAs( in, PluginDescription.class );
                 if(!BungeeLib.enablePlugin(new HashMap<PluginDescription,Boolean>(), new Stack<PluginDescription>(), desc)){
                     return "FAILED TO LOAD";
                 }

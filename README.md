@@ -1,3 +1,7 @@
+NON-functional
+Would need to push some code unstream for allowing to unload plugins in addition to pusing just one in PluginManager
+
+
 This version is for bungeecord, it just has load/unload and is very rough, but may work.
 
 

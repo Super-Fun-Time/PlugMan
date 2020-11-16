@@ -97,13 +97,6 @@ public class LoadCommand extends Command {
             return;
         }
 
-        Plugin potential = PluginUtil.getPluginByName(args, 1);
-
-        if (potential != null) {
-            sender.sendMessage("load.already-loaded"+potential.getDescription().getName());
-            return;
-        }
-
         String name = StringUtil.consolidateStrings(args, 1);
 
         sender.sendMessage(PluginUtil.load(name));
